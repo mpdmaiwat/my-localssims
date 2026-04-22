@@ -1,0 +1,549 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/mstrSims.master" AutoEventWireup="true" CodeFile="__ASMT_MA_Sched_Fees.aspx.cs" Inherits="ASMT_MA_Sched_Fees" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+
+        #tblData { 
+            width: 100%;
+            padding-right: 16px;
+        }
+
+        #tblData tbody,
+        #tblData thead { display: block; }
+
+        #tblData tbody {
+            height: 270px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        #tblData tbody td:last-child, #tblData thead th:last-child {
+            border-right: none;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentBody" Runat="Server">
+    <%-- HIDDEN FIELDS --%>
+    <%-- ================================================================================== --%>
+    <asp:HiddenField runat="server" ID="hfSaveType" ClientIDMode="Static" Value="N" /> <%--// E - Edit; N - New--%>
+    <asp:HiddenField runat="server" ID="hfSelSY" ClientIDMode="Static" Value="2017" />
+    <asp:HiddenField runat="server" ID="hfSelSessionCode" ClientIDMode="Static" Value="R" />
+    <asp:HiddenField runat="server" ID="hfSelSessionDesc" ClientIDMode="Static" Value="Regular" />
+    <asp:HiddenField runat="server" ID="hfSelLevelCode" ClientIDMode="Static" Value="G10" />
+    <asp:HiddenField runat="server" ID="hfSelLevelDesc" ClientIDMode="Static" Value="GRADE 10" />
+    <%-- ================================================================================== --%>
+
+    <div class="container container_content">
+        <div class="row"> <%--PAGE CONTROLS--%>
+            <div class="col-md-6">
+                <%--<span class="border-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>--%>
+                <asp:LinkButton runat="server" ID="lnkCtrlTrash" CssClass="btn bg-teal btn-flat btn-sm" ClientIDMode="Static"><i class="fa fa-trash"></i>&nbsp;RECENTLY DELETED</asp:LinkButton>
+                <asp:LinkButton runat="server" ID="lnkCtrlHistory" CssClass="btn bg-olive btn-flat btn-sm" ClientIDMode="Static"><i class="fa fa-history"></i>&nbsp;VIEW ARCHIVES</asp:LinkButton>
+            </div>
+        </div> <%--/END - PAGE CONTROLS--%>
+
+        <hr />
+        <div class="row">
+            <div class="col-md-3">
+                <div class="box box-primary">
+                    <div class="box-header with-border"><i class="fa fa-info-circle text-info"></i>&nbsp;&nbsp;Schedule of Fees information</div>
+                    <div class="box-body">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>SY:</td>
+                                    <td>
+                                        <asp:DropDownList runat="server" ID="ddSY" CssClass="form-control" ClientIDMode="Static">
+                                            <asp:ListItem Value="2017">2017-2018</asp:ListItem>
+                                            <asp:ListItem Value="2018">2018-2019</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Session:</td>
+                                    <td style="padding-top: 0px;">
+                                        <div class="checkbox">
+                                            <label>
+                                                <asp:CheckBox runat="server" ID="chkRegular" ClientIDMode="Static" onclick="session_Checked(this.id)" /> Regular
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <asp:CheckBox runat="server" ID="chkSummer" ClientIDMode="Static" onclick="session_Checked(this.id)" /> Summer
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Level:</td>
+                                    <td>
+                                        <asp:DropDownList runat="server" ID="ddLevel" CssClass="form-control" ClientIDMode="Static">
+                                            <asp:ListItem Value="">--- SELECT LEVEL ---</asp:ListItem>
+                                            <asp:ListItem Value="P1">NURSERY 1</asp:ListItem>
+                                            <asp:ListItem Value="P2">NURSERY 2</asp:ListItem>
+                                            <asp:ListItem Value="P3">KINDERGARTEN</asp:ListItem>
+                                            <asp:ListItem Value="G1">GRADE 1</asp:ListItem>
+                                            <asp:ListItem Value="G2">GRADE 2</asp:ListItem>
+                                            <asp:ListItem Value="G3">GRADE 3</asp:ListItem>
+                                            <asp:ListItem Value="G4">GRADE 4</asp:ListItem>
+                                            <asp:ListItem Value="G5">GRADE 5</asp:ListItem>
+                                            <asp:ListItem Value="G6">GRADE 6</asp:ListItem>
+                                            <asp:ListItem Value="G7">GRADE 7</asp:ListItem>
+                                            <asp:ListItem Value="G8">GRADE 8</asp:ListItem>
+                                            <asp:ListItem Value="G9">GRADE 9</asp:ListItem>
+                                            <asp:ListItem Value="G10">GRADE 10</asp:ListItem>
+                                            <asp:ListItem Value="G11">GRADE 11</asp:ListItem>
+                                            <asp:ListItem Value="G12">GRADE 12</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Strand:</td>
+                                    <td>
+                                        <asp:DropDownList runat="server" ID="ddStrand" CssClass="form-control" ClientIDMode="Static">
+                                            <asp:ListItem Value="">--- SELECT STRAND ---</asp:ListItem>
+                                            <asp:ListItem Value="S">STEM</asp:ListItem>
+                                            <asp:ListItem Value="G">GAS</asp:ListItem>
+                                            <asp:ListItem Value="A">GAS (ABM)</asp:ListItem>
+                                            <asp:ListItem Value="H">GAS (HUMSS)</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table> <%--/.table--%>
+                    </div> <%--/.box-body--%>
+                    <div class="box-footer">
+                        <asp:LinkButton runat="server" ID="lnkSubmit" CssClass="btn btn-primary btn-flat btn-sm pull-right" ClientIDMode="Static"><i class="fa fa-sign-out"></i>&nbsp;SUBMIT</asp:LinkButton>
+                    </div>
+                </div> <%--/.box .box-info--%>
+            </div> <%--/.col-md-4--%>
+
+            <div class="col-md-9">
+                <div class="box box-warning">
+                    <div class="box-header with-border"><i class="fa fa-list text-yellow"></i>&nbsp;&nbsp;maintenance of schedule of fees (<span id="sel_level" class="text-bold text-info">GRADE 10</span>)</div>
+                    <div class="box-body" style="min-height: 200px;">
+                        <asp:Panel runat="server" ID="pnlNoFound">
+                            <%--<table class="table table-bordered table-condensed table-striped table-hover table-responsive" border="1">
+                                
+                            </table>--%>
+                            <div id="tblContent" style="width: 100%;">
+                                <table id="tblData" class="table table-bordered table-responsive table-striped table-hover table-condensed" border="1" style="cursor: default;">
+                                    <thead>
+                                        <tr style="background-color: #dfdfdf;">
+                                            <th><asp:CheckBox runat="server" ID="chkAll" ClientIDMode="Static" /></th>
+                                            <th>FEE CODE</th>
+                                            <th>FEE TYPE</th>
+                                            <th>FEE DESCRIPTION</th>
+                                            <th>FEE AMOUNT</th>
+                                            <th>ACTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>271000</td>
+                                            <td>TF</td>
+                                            <td>Deferred Tuition Fee</td>
+                                            <td align="right">43,592.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281100</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund  · Registration Fee</td>
+                                            <td align="right">750.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281200</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund Balance · Medical & Dental Fee</td>
+                                            <td align="right">850.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281300</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund Balance · Identification Card</td>
+                                            <td align="right">200.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281400</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund Balance · LRC-Multi Media Devt. Fees</td>
+                                            <td align="right">1,400.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281500</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund Balance · Journals,Periodicals,Testpapers</td>
+                                            <td align="right">1,300.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281600</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund Balance · Insurance</td>
+                                            <td align="right">470.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281711</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund Balance · Athletic Fees</td>
+                                            <td align="right">1,200.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281800</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund Balance· Interest Clubs</td>
+                                            <td align="right">750.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><asp:CheckBox runat="server" /></td>
+                                            <td>281900</td>
+                                            <td>MF</td>
+                                            <td>Depository Fund Balance · Learning Materials</td>
+                                            <td align="right">1,050.00</td>
+                                            <td align="center"><a href="#" class="row-edit" title="edit"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;<a href="#" class="row-delete" title="delete"><i class="fa fa-remove text-danger"></i></a></td>
+                                        </tr>
+                                    </tbody> <%--/END - SAMPLE DATA--%>
+                                </table> <%--/#tblData--%>
+                            </div> <%--/#tblContent--%>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table-condensed" style="font-style: italic; font-weight: bold;">
+                                        <tr>
+                                            <td>* TF = Tuition Fee</td>
+                                            <td>* MF = Miscellaneous Fee</td>
+                                        </tr>
+                                    </table>
+                                </div> <%--/.col-md-12--%>
+                            </div> <%--/.row--%>
+                        </asp:Panel>
+                        <asp:Panel runat="server" ID="pnlDataList" Visible="false">
+                            <asp:GridView runat="server" ID="gvSchedFees" CssClass="table table-bordered table-condensed table-striped table-hover"
+                                 AutoGenerateColumns="false">
+                            </asp:GridView>
+                        </asp:Panel>
+                    </div> <%--/.box-body--%>
+                    <div class="box-footer">
+                        <div class="pull-right">
+                            <%--<asp:LinkButton runat="server" ID="lnkCtrlNew" CssClass="btn btn-success btn-xs" ClientIDMode="Static" Width="100px" OnClientClick="addNew_Clicked()"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;ADD NEW</asp:LinkButton>--%>
+                            <button type="button" id="lnkCtrlNew" class="btn btn-success btn-xs" style="width: 100px;" onclick="addNew_Clicked()"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;ADD NEW</button>
+                            <asp:LinkButton runat="server" ID="lnkCtrlDelete" CssClass="btn btn-danger btn-xs" ClientIDMode="Static" Width="100px"><i class="fa fa-close"></i>&nbsp;&nbsp;&nbsp;&nbsp;DELETE</asp:LinkButton>
+                            <%--<asp:LinkButton runat="server" ID="lnkCtrlCopy" CssClass="btn btn-primary btn-xs" ClientIDMode="Static" Width="100px"><i class="fa fa-copy"></i>&nbsp;&nbsp;&nbsp;&nbsp;COPY TO</asp:LinkButton>--%>
+                            <button type="button" id="lnkCtrlCopy" class="btn btn-primary btn-xs" style="width: 100px;" onclick="copyTo_Clicked()"><i class="fa fa-copy"></i>&nbsp;&nbsp;&nbsp;&nbsp;COPY TO</button>
+                        </div>
+                    </div> <%--/.box-footer--%>
+                </div> <%--/.box .box-warning--%>
+            </div> <%--/.col-md-8--%>
+        </div> <%--/.row--%>
+    </div>
+
+    <%-- Modals --%>
+    <div id="DE_SchedFees" class="modal fade" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        <i class="fa fa-edit"></i>&nbsp;&nbsp;<span id="typeDE"></span> SCHEDULE OF FEES
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;SCHEDULE OF FEES INFORMATION</div>
+                                <div class="panel-body">
+                                    <table class="table-condensed">
+                                        <tr>
+                                            <td width="100px">Session:</td>
+                                            <td class="text-bold text-uppercase"><span id="spSession"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>School Year:</td>
+                                            <td class="text-bold text-uppercase"><span id="spSY"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Level:</td>
+                                            <td class="text-bold text-uppercase"><span id="spLevel"></span></td>
+                                        </tr>
+                                    </table>
+                                </div> <%--/.panel-body--%>
+                            </div> <%--/.panel .panel-default--%>
+                        </div> <%--/.col-md-12--%>
+                    </div> <%--/.row--%>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><i class="fa fa-table"></i>&nbsp;&nbsp;data entry</div>
+                                <div class="panel-body">
+                                    <table class="table-condensed" style="width: 100%;">
+                                        <tr>
+                                            <td width="120px">Fee Code:</td>
+                                            <td>
+                                                <asp:TextBox runat="server" ID="txtFeeCode" CssClass="form-control text-uppercase input-sm" ClientIDMode="Static" Width="120px"></asp:TextBox>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fee Type:</td>
+                                            <td>
+                                                <asp:DropDownList runat="server" ID="ddFeeType" CssClass="form-control input-sm" ClientIDMode="Static" Width="180px">
+                                                    <asp:ListItem Value="">--- SELECT FEE TYPE ---</asp:ListItem>
+                                                    <asp:ListItem Value="TF">TUITION FEE</asp:ListItem>
+                                                    <asp:ListItem Value="MF">MISCELLANEOUS FEE</asp:ListItem>
+                                                </asp:DropDownList>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fee Description:</td>
+                                            <td>
+                                                <asp:TextBox runat="server" ID="txtFeeDesc" CssClass="form-control text-capitalize input-sm" ClientIDMode="Static" MaxLength="100"></asp:TextBox>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fee Amount</td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon text-bold">Php</span>
+                                                    <asp:TextBox runat="server" ID="txtFeeAmt" CssClass="form-control text-right input-sm" ClientIDMode="Static" Width="120px"></asp:TextBox>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div> <%--/.panel-body--%>
+                            </div> <%--/.panel .panel-default--%>
+                        </div> <%--/.col-md-12--%>
+                    </div> <%--/.row--%>
+                </div> <%--/.modal-body--%>
+                <div class="modal-footer">
+                    <asp:LinkButton runat="server" ID="lnkSave" CssClass="btn btn-success btn-flat btn-sm"><i class="fa fa-floppy-o"></i>&nbsp;SAVE</asp:LinkButton>
+                    <button type="button" class="btn btn-default btn-flat btn-sm" data-dismiss="modal"><i class="fa fa-close text-danger"></i>&nbsp;CLOSE</button>
+                </div>
+            </div> <%--/.modal-content--%>
+        </div> <%--/.modal-dialog--%>
+    </div> <%--/#DE_SchedFees--%>
+
+    <div id="CopyTo" class="modal fade" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        <i class="fa fa-copy"></i>&nbsp;&nbsp;COPY TO
+                    </h4>
+                </div>
+                <div class="modal-body">
+
+                </div> <%--/.modal-body--%>
+                <div class="modal-footer">
+                    <asp:LinkButton runat="server" ID="lnkCopySubmit" CssClass="btn btn-success btn-flat btn-sm"><i class="fa fa-sign-out"></i>&nbsp;SUBMIT</asp:LinkButton>
+                    <button type="button" class="btn btn-default btn-flat btn-sm" data-dismiss="modal"><i class="fa fa-close text-danger"></i>&nbsp;CLOSE</button>
+                </div> <%--/.modal-footer--%>
+            </div> <%--/.modal-content--%>
+        </div> <%--/.modal-dialog--%>
+    </div> <%--/#CopyTo--%>
+
+    <div id="DeleteRow" class="modal fade" data-backdrop="static">
+        <div class="modal-dialog" style="width: 450px;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        <i class="fa fa-question-circle"></i>&nbsp;&nbsp;DELETE ROW
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Do you want to delete this?
+                    </p>
+                </div> <%--/.modal-body--%>
+                <div class="modal-footer">
+                    <asp:LinkButton runat="server" ID="lnkOkDelete" CssClass="btn btn-success btn-flat btn-sm"><i class="fa fa-check"></i>&nbsp;OK</asp:LinkButton>
+                    <button type="button" class="btn btn-default btn-flat btn-sm" data-dismiss="modal"><i class="fa fa-close text-danger"></i>&nbsp;CANCEL</button>
+                </div> <%--/.modal-footer--%>
+            </div> <%--/.modal-content--%>
+        </div> <%--/.modal-dialog--%>
+    </div> <%--/#DeleteRow--%>
+
+    <script>
+        var row = $('#tblContent').find('table tbody tr');
+
+        var $table = $('#tblData'),
+            $bodyCells = $table.find('tbody tr').children(),
+            colWidth;
+
+
+        $(window).resize(function () {
+            colWidth = $bodyCells.map(function (i) {
+                return $(this).width();
+            }).get();
+
+            $table.find('thead tr').children().each(function (i, v) {
+                $(v).width(colWidth[i]);
+            });
+
+            $table.find('tbody tr td:first').width(15);
+            $table.find('thead tr th:first').width(15);
+            $table.find('tbody tr td').eq(1).width(70);
+            $table.find('thead tr th').eq(1).width(70);
+            $table.find('tbody tr td').eq(2).width(70);
+            $table.find('thead tr th').eq(2).width(70);
+            $table.find('tbody tr td').eq(4).width(90);
+            $table.find('thead tr th').eq(4).width(90);
+            $table.find('tbody tr td:last').width(80);
+            $table.find('thead tr th:last').width(80);
+
+            //$(this).trigger('resize');
+        }).resize().resize();
+
+        $(document).ready(function () {
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
+            prm.add_initializeRequest(initializeRequest);
+            prm.add_endRequest(endRequest);
+
+            //$('.select2').select2();
+        });
+
+        function initializeRequest() {
+            //setupCheckbox();
+            $('.select2').select2();
+        }
+
+        function endRequest() {
+            //setupCheckbox();
+            $('.select2').select2();
+        }
+
+
+        // =======================================================================
+        $('#chkAll').change(function () {
+            var chk = $('#tblContent').find('table tbody tr td input[type="checkbox"]');
+            chk.prop('checked', $(this).prop('checked'));
+            chk.trigger('change');
+
+            $(this).tooltip('hide');
+        });
+
+        $('#chkAll').tooltip({
+            title: function () {
+                if ($(this).is(':checked')) {
+                    return 'Uncheck all';
+                } else {
+                    return 'Check all';
+                }
+            }
+        });
+
+        row.click(function () {
+            var chk = $(this).find('td input[type="checkbox"]');
+            chk.trigger('click');
+        });
+
+        row.find('td input[type="checkbox"]').change(function () {
+            if (!$(this).is(':checked')) {
+                $(this).parent().parent().removeAttr('style');
+                if ($('#chkAll').is(':checked')) {
+                    document.getElementById('chkAll').checked = false;
+                }
+            } else {
+                $(this).parent().parent().attr('style', 'color: #000000; background-color: #BFDBFF;');
+            }
+        });
+
+        row.find('td input[type="checkbox"]').click(function (e) {
+            e.stopPropagation();
+        });
+
+        $('.row-edit').tooltip();
+        $('.row-delete').tooltip();
+
+        row.find('td .row-edit').click(function (e) {
+            var sel_row = $(this).parent().parent();
+            var data = [];
+            var i = 0;
+            sel_row.find('td').each(function () {
+                data[i] = $(this).text();
+                i++;
+            });
+
+            $('#hfSaveType').val('E'); // setting save type to 'E' for edit
+            $('#typeDE').text('EDIT');
+            var session = $('#hfSelSessionDesc').val();
+            var sy = $('#hfSelSY').val();
+            var level = $('#hfSelLevelDesc').val();
+            $('#spSession').text(session);
+            $('#spSY').text(sy + '-' + (parseInt(sy) + 1));
+            $('#spLevel').text(level);
+
+            $('#txtFeeCode').val(data[1]);
+            $('#ddFeeType').val(data[2]);
+            $('#txtFeeDesc').val(data[3]);
+            $('#txtFeeAmt').val(data[4]);
+
+            $('#DE_SchedFees').modal('show');
+
+            $(this).tooltip('hide');
+
+            e.stopPropagation();
+        });
+
+        row.find('td .row-delete').click(function (e) {
+            $(this).tooltip('hide');
+            $('#DeleteRow').modal('show');
+
+            e.stopPropagation();
+        });
+
+        // =======================================================================
+
+        function session_Checked(selector) {
+            document.getElementById('chkRegular').checked = false;
+            document.getElementById('chkSummer').checked = false;
+            document.getElementById(selector).checked = true;
+        }
+
+        function addNew_Clicked() {
+            $('#hfSaveType').val('N'); // setting save type to 'N' for new entry
+            $('#typeDE').text('NEW');
+            var session = $('#hfSelSessionDesc').val();
+            var sy = $('#hfSelSY').val();
+            var level = $('#hfSelLevelDesc').val();
+            $('#spSession').text(session);
+            $('#spSY').text(sy + '-' + (parseInt(sy) + 1));
+            $('#spLevel').text(level);
+
+            clearSchedFeeFields();
+
+            $('#DE_SchedFees').modal('show');
+        }
+
+        function copyTo_Clicked() {
+            $('#CopyTo').modal('show');
+        }
+
+        function clearSchedFeeFields() {
+            $('#txtFeeCode').val('');
+            $('#txtFeeDesc').val('');
+            $('#txtFeeAmt').val('');
+        }
+    </script>
+</asp:Content>
+

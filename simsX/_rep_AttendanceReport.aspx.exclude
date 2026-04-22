@@ -1,0 +1,102 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/mstrSims.master" AutoEventWireup="true" CodeFile="_rep_AttendanceReport.aspx.cs" Inherits="rep_AttendanceReport" %>
+<%@ Register Assembly="CrystalDecisions.Web, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
+    Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<style type="text/css">
+        body
+        {
+        padding-top: 50px;    
+        }
+</style>        
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentBody" Runat="Server">
+
+  <script type="text/javascript">
+      $(document).ready(function () {
+
+          var prm = Sys.WebForms.PageRequestManager.getInstance();
+          prm.add_initializeRequest(InitialRequest);
+          prm.add_endRequest(EndRequest);
+
+          setCalendarInput();
+
+      });
+
+      function InitialRequest(sender, args) {
+      }
+
+      function EndRequest(sender, args) {
+       
+          setCalendarInput();
+         
+      }
+
+
+  
+
+
+      //For Calendar Inputs
+      function setCalendarInput() {
+          $('.calendarInput').datepicker();
+      }
+
+
+
+   
+</script>       
+
+
+  <div class="container container_content">
+ 
+  <div class="row">
+ 
+  <div class="col-md-3">
+  <ul class="list-group">
+  <li class="list-group-item"> 
+  <asp:DropDownList runat="server" ID="ddReportList" CssClass="dropdown form-control"></asp:DropDownList>
+  </li>
+  <li class="list-group-item"> 
+   <div class="input-group">
+  <span class="input-group-addon alert-danger"><span class="glyphicon glyphicon-calendar"></span> START</span>
+  <asp:TextBox runat="server" ID="txtStartDate" CssClass="form-control calendarInput"></asp:TextBox>
+  </div>
+  </li>
+  <li class="list-group-item">
+  <div class="input-group">
+  
+  <span class="input-group-addon alert-danger"><span class="glyphicon glyphicon-calendar"></span> END</span>
+  <asp:TextBox runat="SErver" ID="txtEndDate" CssClass="form-control calendarInput"></asp:TextBox>
+  </div>
+  </li>
+  <li class="list-group-item">
+  <asp:DropDownList runat="server" ID="ddGradeLevel" CssClass="dropdown form-control"></asp:DropDownList>
+  </li>
+  <li class="list-group-item">
+    <asp:DropDownList runat="server" ID="ddSectionList" CssClass="dropdown form-control"></asp:DropDownList>
+  </li>
+  <li class="list-group-item text-right">
+  <asp:LinkButton runat="server" ID="lnkPreview" CssClass="btn btn-primary" 
+          onclick="lnkPreview_Click">PREVIEW</asp:LinkButton></li>
+  </ul>
+  </div>
+  
+  <div class="col-md-9">
+   <CR:CrystalReportViewer ID="crvAttendance" runat="server" AutoDataBind="true" 
+            HasCrystalLogo="False" ToolPanelView="None" 
+            ToolPanelWidth="200px" Width="1024px" EnableDatabaseLogonPrompt="False" 
+            EnableParameterPrompt="False" HasToggleGroupTreeButton="False" 
+            HasToggleParameterPanelButton="False" ReuseParameterValuesOnRefresh="True" 
+             />
+  </div>
+  
+  </div>
+ 
+ 
+ 
+  
+
+  </div>
+</asp:Content>
+

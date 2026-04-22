@@ -1,0 +1,132 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using System.Data;
+using SIMSBDAL;
+
+public partial class rep_AttendanceReport : System.Web.UI.Page
+{
+    ReportDocument oReportDocument = new ReportDocument();
+    xSystem oSystem = new xSystem();
+    Utilities oUtilities = new Utilities();
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!Page.IsPostBack)
+        {
+            txtStartDate.Text = DateTime.Now.ToShortDateString();
+            txtEndDate.Text = DateTime.Now.ToShortDateString();
+
+            displayReports_List();
+            displayGradeLevel();
+            displaySectionList();
+
+            
+        }
+
+        displayReport();
+    }
+
+    private void displayReport()
+    {
+        string strReportPath = "";
+
+
+        DateTime dtStartDate = Convert.ToDateTime(txtStartDate.Text);
+        DateTime dtEndDate = Convert.ToDateTime(txtEndDate.Text);
+
+        ParameterRangeValue myRangeValue = new ParameterRangeValue();
+        myRangeValue.StartValue = dtStartDate; //txtDateStart.Text;
+        myRangeValue.EndValue = dtEndDate;
+
+
+        DataTable dt = new DataTable();
+        dt = oSystem.GET_REPORTS_LIST();
+
+        DataView dv = dt.DefaultView;
+
+        dv.RowFilter = "reportID = '" + ddReportList.SelectedValue + "'";
+
+        if (dv.Count > 0)
+        {
+            DataRowView drv = dv[0];
+
+            strReportPath = drv["reportPath"].ToString();
+            oReportDocument.Load(Server.MapPath(strReportPath));
+        }
+
+        else
+        { 
+        //Default Report
+         oReportDocument.Load(Server.MapPath("~/Reports/Attendance_Today.rpt"));
+        }
+
+
+
+        //oReportDocument.Load(Server.MapPath("~/Reports/Attendance_Summary_2.rpt"));
+
+        oReportDocument.SetParameterValue("LevelCode", ddGradeLevel.SelectedValue);
+        oReportDocument.SetParameterValue("Section", ddSectionList.SelectedValue);
+        oReportDocument.SetParameterValue("DateRange", myRangeValue);
+        oReportDocument.SetDatabaseLogon("sa", "p@ssw0rd"); // Supply user credentials
+
+        crvAttendance.ReportSource = oReportDocument;
+    }
+
+    private void displayReports_List()
+    {
+        DataTable dt = new DataTable();
+
+        dt = oSystem.GET_REPORTS_LIST();
+
+        DataView dv = dt.DefaultView;
+        dv.RowFilter = "reportType = '" + 'A' + "'";
+
+        //DataRowView dvr = dv[0];
+
+        ddReportList.DataSource = dv;
+        ddReportList.DataTextField = dv.Table.Columns["reportDescription"].ToString();
+        ddReportList.DataValueField = dv.Table.Columns["reportID"].ToString();
+        ddReportList.DataBind();
+
+
+    }
+
+    protected void lnkPreview_Click(object sender, EventArgs e)
+    {
+        displayReport();
+    }
+
+    protected void Page_UnLoad(object sender, EventArgs e)
+    {
+
+        //Cleaning Report Documents
+        oReportDocument.Close();
+
+    }
+
+    private void displayGradeLevel()
+    {
+        DataTable dt = oUtilities.GET_GRADELEVEL_LIST();
+
+        ddGradeLevel.DataSource = dt;
+        ddGradeLevel.DataTextField = dt.Columns["LevelTypeDesc"].ToString();
+        ddGradeLevel.DataValueField = dt.Columns["LevelTypeCode"].ToString();
+        ddGradeLevel.DataBind();
+    }
+
+    private void displaySectionList()
+    {
+        DataTable dt = oUtilities.GET_SECTION_LIST();
+
+        ddSectionList.DataSource = dt;
+        ddSectionList.DataTextField = dt.Columns["SectionCode"].ToString();
+        ddSectionList.DataValueField = dt.Columns["SectionCode"].ToString();
+        ddSectionList.DataBind();
+    }
+}

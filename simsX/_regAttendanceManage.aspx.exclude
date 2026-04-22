@@ -1,0 +1,242 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/mstrSims.master" AutoEventWireup="true" CodeFile="_regAttendanceManage.aspx.cs" Inherits="regAttendanceManage" %>
+
+
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+  
+  
+    <style type="text/css">
+        body
+        {
+            padding-top: 50px;
+        }
+        
+          /*for Multiline disable resizing */
+        
+        textarea
+        {
+        resize: none;    
+        }
+    </style>
+</asp:Content>
+
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentBody" Runat="Server">
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_initializeRequest(InitialRequest);
+        prm.add_endRequest(EndRequest);
+
+        setCalendarInput();
+        setTimeInput();
+
+    });
+
+    function InitialRequest(sender, args) {
+    }
+
+    function EndRequest(sender, args) {
+
+        setCalendarInput();
+        setTimeInput();
+
+    }
+
+
+
+
+
+    //For Calendar Inputs
+    function setCalendarInput() {
+        $('.calendarInput').datepicker();
+    }
+
+     //For Time Picker Only 'setTime', '08:00 AM',
+    function setTimeInput() {
+        $('.timeInput').timepicker(
+          {
+              template: false,
+              showInputs: false,
+              minuteStep: 1,
+              defaultTime: false
+              
+          });
+
+//        $('.timeInputTemplate').timepicker('setTime', '08:00 AM');
+
+    }
+
+   
+</script>     
+
+
+<asp:UpdatePanel runat="server" ID="upScreeningSetup" UpdateMode="Conditional">
+<ContentTemplate>
+
+<div class="container container_content">
+
+<div class="row">
+
+
+
+
+<div class="col-md-12">
+
+<div class="panel panel-warning">
+<div class="panel-heading">
+    <div class="row">
+        <div class="col-md-3">
+        <div class="input-group">
+        <span class="input-group-addon alert-danger"><span class="glyphicon glyphicon-calendar"></span> Date</span>
+        <asp:TextBox runat="server" ID="txtDateApplied" CssClass="form-control calendarInput"></asp:TextBox>
+        </div>
+        </div>
+        
+        <div class="col-md-4">
+        <asp:LinkButton runat="server" ID="lnkSetDate" CssClass="btn btn-primary btn-sm" 
+                onclick="lnkSetDate_Click">Set Date
+        </asp:LinkButton>
+        </div>
+      
+        <div class="col-md-5 text-right">
+            <div class="input-group input-group-sm">
+                <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control text-uppercase"
+                    placeholder="Search Student">
+                </asp:TextBox>
+                <div class="input-group-btn">
+                    <asp:LinkButton runat="server" ID="U_Search" CssClass="btn btn-primary" 
+                        onclick="U_Search_Click"><span class="glyphicon glyphicon-search"></span> GO</asp:LinkButton>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+<div class="panel-body">
+
+
+<asp:Panel runat="server" ID="panelStudentList" ScrollBars="Vertical" Height="450px">
+
+<asp:GridView runat="server" ID="gvStudentList" AutoGenerateColumns="false"
+ CssClass="table table-hover" GridLines="None">
+    <Columns>
+   
+    <asp:BoundField DataField="xBARCODE" ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
+            <HeaderStyle CssClass="hidden" />
+            <ItemStyle CssClass="hidden" />
+        </asp:BoundField>
+        <asp:BoundField DataField="StudNum" ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
+            <HeaderStyle CssClass="hidden" />
+            <ItemStyle CssClass="hidden" />
+        </asp:BoundField>
+
+      
+        
+        <asp:TemplateField>
+            <ItemTemplate>
+                <asp:Image runat="server" ID="imgCustomer" Width="50" Height="50" ImageUrl='<%# Bind("PhotoPath") %>'
+                    CssClass="img-circle img-responsive" />
+            </ItemTemplate>
+        </asp:TemplateField>
+       
+        <asp:BoundField DataField="StudName" />
+
+        <asp:TemplateField ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
+        <HeaderTemplate>IN</HeaderTemplate>
+        <ItemTemplate>
+       <%-- <asp:Label runat="server" ID="lblTimeIn" Text='<%# Eval("xTime_IN") %>'></asp:Label>--%>
+        <asp:TextBox runat="server" ID="txtTimeIn" Text='<%# Eval("xTime_IN") %>' CssClass="form-control timeInput text-center"></asp:TextBox>
+        </ItemTemplate>
+        </asp:TemplateField>
+
+        <asp:TemplateField  ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
+        <HeaderTemplate>OUT</HeaderTemplate>
+        <ItemTemplate>
+        <%-- <asp:Label runat="server" ID="lblTimeOut" Text='<%# Eval("xTime_OUT") %>'></asp:Label>--%>
+       <asp:TextBox runat="server" ID="txtTimeOut" Text='<%# Eval("xTime_OUT") %>' CssClass="form-control timeInput text-center"></asp:TextBox>
+        </ItemTemplate>
+        </asp:TemplateField>
+        
+        <asp:TemplateField ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
+        <HeaderTemplate>E-Departure</HeaderTemplate>
+        <ItemTemplate>
+        <asp:CheckBox runat="server" ID="chkUnderTime" Checked='<%# Eval("xUNDERTIME") %>' />
+        </ItemTemplate>
+        </asp:TemplateField>
+
+        <asp:TemplateField ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
+        <HeaderTemplate>Complete</HeaderTemplate>
+        <ItemTemplate>
+        <asp:CheckBox runat="server" ID="chkComplete" Checked='<%# Eval("xCOMPLETE") %>' />
+        </ItemTemplate>
+        </asp:TemplateField>
+
+         <asp:TemplateField ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
+        <HeaderTemplate>Absent</HeaderTemplate>
+        <ItemTemplate>
+        <asp:CheckBox runat="server" ID="chkAbsent" Checked='<%# Eval("xABSENT") %>' />
+        </ItemTemplate>
+        </asp:TemplateField>
+
+        <asp:TemplateField ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
+        <HeaderTemplate>HalfDay</HeaderTemplate>
+        <ItemTemplate>
+        <asp:CheckBox runat="server" ID="chkHalfDay" Checked='<%# Eval("xHALFDAY") %>' />
+        </ItemTemplate>
+        </asp:TemplateField>
+
+         <asp:TemplateField ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
+        <HeaderTemplate>OverWrite</HeaderTemplate>
+        <ItemTemplate>
+        <asp:CheckBox runat="server" ID="chkOverwrite" Checked='<%# Eval("xOVERWRITE") %>' />
+        </ItemTemplate>
+        </asp:TemplateField>
+
+      
+         <asp:TemplateField>
+        <ItemTemplate>
+         
+         <asp:LinkButton runat="server" ID="gvEdit" CssClass="btn btn-success btn-sm"
+         OnClick="gvEdit_Click" OnClientClick="return confirm('Are you sure you want ot update this row?');">UPDATE</asp:LinkButton>
+          </ItemTemplate>
+        </asp:TemplateField>
+
+    </Columns>
+</asp:GridView>
+
+
+</asp:Panel>
+
+
+</div><!--End of Panel Body -->
+</div>
+
+
+</div><!--End of Right Panel -->
+
+
+</div><!--End of Main Row-->
+
+
+
+
+ 
+
+
+
+
+
+</div><!--End of Bootstrap main container -->
+
+
+
+</ContentTemplate>
+</asp:UpdatePanel> <%--End of Update Panel--%>
+
+
+
+
+</asp:Content>
+

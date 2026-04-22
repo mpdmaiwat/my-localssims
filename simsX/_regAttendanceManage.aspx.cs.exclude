@@ -1,0 +1,131 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using SIMSBDAL;
+
+public partial class regAttendanceManage : System.Web.UI.Page
+{
+    xSystem oSystem = new xSystem();
+    Attendance oAttendance = new Attendance();
+
+  
+
+   
+    
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        
+        if (!IsPostBack)
+        {
+            display_Attendance_All_TODAY();
+            txtDateApplied.Text = oSystem.GetServerDate().ToShortDateString(); 
+        }
+
+    }
+
+
+    private void display_Attendance_All_TODAY()
+    {
+        DataTable dt = oAttendance.GET_ATTENDANCE_ALL_TODAY();
+
+        gvStudentList.DataSource = dt;
+        gvStudentList.DataBind();
+    }
+
+    private void display_Attendance_Date_Selected()
+    {
+        if(!string.IsNullOrEmpty(txtDateApplied.Text))
+        {
+        DataTable dt = oAttendance.GET_ATTENDANCE_ALL_DATE(Convert.ToDateTime(txtDateApplied.Text));
+        
+        gvStudentList.DataSource = dt;
+        gvStudentList.DataBind();
+            }
+        else
+        {
+        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "msg", "<script>alert('Please Select Date');</script>", false);
+        }
+        
+    }
+  
+   
+    protected void U_Search_Click(object sender, EventArgs e)
+    {
+     DISPLAY_SEARCH_STUDENT(txtSearch.Text, Convert.ToDateTime(txtDateApplied.Text));
+    }
+
+    protected void gvEdit_Click(object sender, EventArgs e)
+    {
+        //Testing
+        //GridViewRow gvRow = (GridViewRow)((LinkButton)sender).NamingContainer;
+
+        var selEdit = (Control)sender;
+        GridViewRow gvRow = (GridViewRow)selEdit.NamingContainer;
+        
+        string getBarcode = gvRow.Cells[0].Text;
+        string getStudNum = gvRow.Cells[1].Text;
+
+        TextBox txtTimeIN = (TextBox)gvRow.Cells[4].FindControl("txtTimeIn");
+        TextBox txtTimeOUT = (TextBox)gvRow.Cells[5].FindControl("txtTimeOut");
+        CheckBox chkED = (CheckBox)gvRow.Cells[6].FindControl("chkUnderTime");
+        CheckBox chkComplete = (CheckBox)gvRow.Cells[7].FindControl("chkComplete");
+        CheckBox chkAbsent = (CheckBox)gvRow.Cells[8].FindControl("chkAbsent");
+        CheckBox chkHalfDay = (CheckBox)gvRow.Cells[9].FindControl("chkHalfDay");
+        CheckBox chkOverWrite = (CheckBox)gvRow.Cells[10].FindControl("chkOverwrite");
+
+
+        if (!string.IsNullOrEmpty(txtDateApplied.Text))
+        {
+            //oAttendance.UPDATE_ATTENDANCE_MANAGE(getBarcode, getStudNum, Convert.ToDateTime(txtDateApplied.Text),Convert.ToDateTime(txtTimeIN.Text),Convert.ToDateTime(txtTimeOUT.Text), chkED.Checked, chkComplete.Checked, chkAbsent.Checked, chkHalfDay.Checked, chkOverWrite.Checked, Session["U_USERID"].ToString());
+        }
+        else
+        { 
+        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "msg", "<script>alert('Please Select Date');</script>", false);
+        }
+    }
+
+
+    //protected void gvStudentList_RowCommand(object sender, GridViewCommandEventArgs e)
+    //{
+    //    if (e.CommandName == "UpdateRow")
+    //    {
+    //        int rowIndex = ((GridViewRow)((LinkButton)e.CommandSource).NamingContainer).RowIndex;
+    //    }
+    //}
+
+    protected void lnkSetDate_Click(object sender, EventArgs e)
+    {
+        display_Attendance_Date_Selected();
+    }
+
+
+    private void DISPLAY_SEARCH_STUDENT(string _studname, DateTime _datelog)
+    {
+        DataTable dt = oAttendance.GET_ATTENDANCE_ALL_DATE(_datelog);
+
+        DataView dv = dt.DefaultView;
+
+        dv.RowFilter = "studname like '%" + _studname + "%'";
+
+        if (dv.Count > 0)
+        {
+            gvStudentList.DataSource = dt;
+            gvStudentList.DataBind();
+            txtSearch.Text = "";
+        }
+        else
+        {
+            //No Found
+            display_Attendance_All_TODAY();
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "msg", "<script>alert('Student not found in this date');</script>", false);
+            txtDateApplied.Text = oSystem.GetServerDate().ToShortDateString();
+            
+            
+        }
+
+    }
+}
