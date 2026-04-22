@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "simsX", "simsX\", "{18E7F037-94E6-46E7-9F5B-E36CC761D9AD}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = "{8714d61f-f385-4f83-9234-decec259f720}|SIMSBDAL.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/simsX"
+		Debug.AspNetCompiler.PhysicalPath = "simsX\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\simsX\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/simsX"
+		Release.AspNetCompiler.PhysicalPath = "simsX\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\simsX\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "19332"
+		SlnRelativePath = "simsX\"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{8714D61F-F385-4F83-9234-DECEC259F720} = {8714D61F-F385-4F83-9234-DECEC259F720}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIMSBDAL", "SIMSBDAL\SIMSBDAL.csproj", "{8714D61F-F385-4F83-9234-DECEC259F720}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18E7F037-94E6-46E7-9F5B-E36CC761D9AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18E7F037-94E6-46E7-9F5B-E36CC761D9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18E7F037-94E6-46E7-9F5B-E36CC761D9AD}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{18E7F037-94E6-46E7-9F5B-E36CC761D9AD}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{8714D61F-F385-4F83-9234-DECEC259F720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8714D61F-F385-4F83-9234-DECEC259F720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8714D61F-F385-4F83-9234-DECEC259F720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8714D61F-F385-4F83-9234-DECEC259F720}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7282E1D8-4A7E-4A2A-A4AA-ABABC45E1DCC}
+	EndGlobalSection
+EndGlobal
